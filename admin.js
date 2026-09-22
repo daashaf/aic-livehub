@@ -747,13 +747,16 @@ function openPublishModal(request) {
 
 function updatePublishPreview(url, uploadZone, hint) {
   uploadZone.querySelector("img")?.remove();
+  const icon = uploadZone.querySelector("svg");
   if (url) {
     const img = document.createElement("img");
     img.src = url;
     uploadZone.prepend(img);
-    hint.textContent = "Preview";
+    hint.textContent = "Click to replace this photo";
+    if (icon) icon.style.display = "none";
   } else {
     hint.textContent = "Click to upload an event photo (optional)";
+    if (icon) icon.style.display = "";
   }
 }
 
