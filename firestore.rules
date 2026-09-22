@@ -1,0 +1,42 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email in ['daashaf003@gmail.com', 'aic-test-staff-1@example.com', 'admin@op.ac.nz'];
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if resource.data.status == 'published'
+        || (request.auth != null && (isAdmin() || resource.data.createdByUid == request.auth.uid));
+
+      allow create: if request.auth != null && (
+        isAdmin()
+        || (request.resource.data.createdByUid == request.auth.uid && request.resource.data.status == 'pending')
+      );
+
+      allow update: if isAdmin();
+
+      allow delete: if isAdmin();
+
+      match /comments/{commentId} {
+        function isOwner() {
+          return get(/databases/$(database)/documents/bookings/$(bookingId)).data.createdByUid == request.auth.uid;
+        }
+
+        allow read: if request.auth != null && (isAdmin() || isOwner());
+        allow create: if request.auth != null && (isAdmin() || isOwner()) && request.resource.data.authorUid == request.auth.uid;
+        allow update, delete: if false;
+      }
+    }
+
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

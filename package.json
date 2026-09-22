@@ -1,0 +1,15 @@
+{
+  "name": "aic-livehub",
+  "private": true,
+  "version": "1.0.0",
+  "description": "AIC LiveHub - campus event livestreaming portal",
+  "scripts": {
+    "start": "serve -l 5173 ."
+  },
+  "devDependencies": {
+    "serve": "^14.2.6"
+  },
+  "dependencies": {
+    "nodemailer": "^10.0.10"
+  }
+}

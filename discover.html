@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>discover — AIC LiveHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Geist:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="discover.css?v=10" />
+  </head>
+  <body class="discover-body auth-pending">
+    <div class="discover-page">
+      <header class="discover-header">
+        <div class="discover-header-inner">
+          <div class="discover-header-left">
+            <div class="discover-brand">
+              <span class="discover-logo-badge">A</span>
+              <div>
+                <p class="discover-brand-name">AIC <span>LIVESTREAMS</span></p>
+                <p class="discover-brand-sub">UNIVERSITY PORTAL</p>
+              </div>
+            </div>
+          </div>
+
+          <nav class="discover-nav">
+            <a href="discover.html" class="active">Discover</a>
+            <a href="my-requests.html">My Requests</a>
+          </nav>
+
+          <div class="discover-header-right">
+            <a class="discover-header-cta" href="student-dashboard?view=new">+ Send a Request</a>
+
+            <div class="discover-account">
+              <button
+                type="button"
+                class="discover-account-trigger"
+                id="account-trigger"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-label="account menu"
+              >
+                <div class="discover-avatar" id="profile-avatar"></div>
+              </button>
+              <div class="discover-account-menu" id="account-menu" hidden>
+                <p class="discover-account-label">Account</p>
+                <p class="discover-account-email" id="profile-name"></p>
+                <span class="discover-role-tag">Student</span>
+                <hr class="discover-account-divider" />
+                <a class="discover-account-logout" href="admin-login.html" id="logout-link">Log out</a>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="discover-menu-toggle"
+              id="mobile-menu-toggle"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-label="menu"
+            >
+              <span></span><span></span><span></span>
+            </button>
+          </div>
+        </div>
+
+        <nav class="discover-mobile-panel" id="mobile-panel" hidden>
+          <a href="discover.html" class="active">Discover</a>
+          <a href="my-requests.html">My Requests</a>
+          <a class="discover-header-cta" href="student-dashboard?view=new">+ Send a Request</a>
+        </nav>
+      </header>
+
+      <section class="discover-hero" id="discover-hero" hidden>
+        <div class="discover-hero-inner">
+          <div class="discover-hero-text">
+            <span class="discover-hero-badge" id="hero-badge">LIVE NOW</span>
+            <h1 id="hero-title"></h1>
+            <p id="hero-copy"></p>
+          </div>
+          <a class="discover-hero-btn" id="hero-btn" href="#">
+            <img src="assets/play-icon.svg" alt="" aria-hidden="true" />
+            <span id="hero-btn-text">Join Broadcast</span>
+          </a>
+        </div>
+      </section>
+
+      <div class="discover-grid">
+        <div class="discover-main">
+          <div class="discover-filter-header">
+            <label class="discover-search">
+              <img src="assets/search-icon.svg" alt="" aria-hidden="true" />
+              <input type="text" id="discover-search-input" placeholder="Search campus events, keywords, or clubs..." />
+            </label>
+            <div class="discover-categories" id="discover-categories"></div>
+          </div>
+
+          <div class="discover-deck">
+            <h2>Upcoming Campus Events</h2>
+            <div class="discover-events-grid" id="discover-events-grid"></div>
+          </div>
+        </div>
+
+        <aside class="discover-sidecar">
+          <div class="discover-promo-card">
+            <h3>Planning a campus gig?</h3>
+            <p>Submit an event request directly to the staff. Secure sound gear, reserving spaces, and get live stream support.</p>
+            <a href="student-dashboard?view=new" class="discover-promo-btn">Submit Request Form</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <script type="module" src="discover.js"></script>
+  </body>
+</html>

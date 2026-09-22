@@ -1,0 +1,372 @@
+.request-workspace {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  padding: 40px 48px;
+}
+
+.request-form-column {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.request-section-header h1 {
+  margin: 0 0 6px;
+  font-family: "Bricolage Grotesque", Georgia, serif;
+  font-weight: 800;
+  font-size: 26px;
+  color: #fff;
+}
+
+.request-section-header p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--portal-muted, #9ca3af);
+}
+
+.request-form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  border-radius: 16px;
+  background: var(--portal-tag-bg, #1a1a22);
+  border: 1px solid var(--portal-tag-border, #2a2a35);
+}
+
+.request-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.request-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.request-field label {
+  font-family: "Geist", inherit;
+  font-weight: 600;
+  font-size: 13px;
+  color: #fff;
+}
+
+.request-field input,
+.request-field select,
+.request-field textarea {
+  background: var(--portal-bg, #131316);
+  border: 1px solid var(--portal-tag-border, #2a2a35);
+  border-radius: 9px;
+  padding: 11px;
+  font-family: "Geist", inherit;
+  font-size: 13px;
+  color: #fff;
+  width: 100%;
+}
+
+.request-field input::placeholder,
+.request-field textarea::placeholder {
+  color: var(--portal-muted, #9ca3af);
+}
+
+.request-field input:read-only {
+  opacity: 0.6;
+}
+
+.request-field input:focus,
+.request-field select:focus,
+.request-field textarea:focus {
+  outline: 2px solid var(--portal-accent, #d2935c);
+  outline-offset: 1px;
+}
+
+.request-field textarea {
+  resize: vertical;
+  min-height: 64px;
+}
+
+.request-action-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.request-btn-draft {
+  border: 1px solid var(--portal-tag-border, #2a2a35);
+  background: transparent;
+  color: #fff;
+  border-radius: 9px;
+  padding: 10px 20px;
+  font-family: "Geist", inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.request-btn-submit {
+  border: none;
+  background: var(--portal-accent, #d2935c);
+  color: #fff;
+  border-radius: 9px;
+  padding: 10px 20px;
+  font-family: "Geist", inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.request-btn-submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.request-history-section {
+  padding: 40px 48px 48px;
+}
+
+.request-history-topbar {
+  margin: 0 0 20px;
+}
+
+.request-history-heading {
+  font-family: "Bricolage Grotesque", Georgia, serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: #fff;
+  margin: 0 0 20px;
+}
+
+.request-history-new-btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: var(--portal-accent, #d2935c);
+  color: #fff;
+  font-family: "Geist", inherit;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.request-history-new-btn:hover {
+  background: #c07f47;
+}
+
+.request-calendar {
+  background: var(--portal-tag-bg, #1a1a22);
+  border: 1px solid var(--portal-tag-border, #2a2a35);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: none;
+}
+
+.request-calendar-header h3 {
+  font-family: "Geist", inherit;
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: none;
+  color: #fff;
+}
+
+.cal-nav-btn {
+  border: 1px solid var(--portal-tag-border, #2a2a35);
+  background: transparent;
+  color: #fff;
+}
+
+.cal-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.cal-weekday {
+  color: var(--portal-muted, #9ca3af);
+  text-transform: none;
+}
+
+.cal-day {
+  border: 1px solid var(--portal-tag-border, #2a2a35);
+  background: var(--portal-bg, #131316);
+}
+
+.cal-day.empty {
+  border-color: transparent;
+  background: transparent;
+}
+
+.cal-day.has-events {
+  border-color: var(--portal-accent, #d2935c);
+}
+
+.cal-day.has-events:hover {
+  background: rgba(210, 147, 92, 0.08);
+}
+
+.cal-day.today .cal-day-num {
+  color: var(--portal-accent, #d2935c);
+}
+
+.cal-day.selected {
+  background: var(--portal-accent, #d2935c);
+  border-color: var(--portal-accent, #d2935c);
+}
+
+.cal-day.selected .cal-day-num,
+.cal-day.selected .cal-event-chip,
+.cal-day.selected .cal-event-more {
+  color: #fff;
+}
+
+.cal-day-num {
+  color: #fff;
+}
+
+.cal-event-chip {
+  color: var(--portal-muted, #9ca3af);
+}
+
+.cal-event-more {
+  color: var(--portal-muted, #9ca3af);
+}
+
+.cal-event-dot.pending {
+  background: var(--portal-accent, #d2935c);
+}
+
+.admin-list-empty {
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px dashed var(--portal-tag-border, #2a2a35);
+  background: transparent;
+  color: var(--portal-muted, #9ca3af);
+  text-align: center;
+}
+
+.admin-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px 18px 24px;
+  border-radius: 16px;
+  background: var(--portal-tag-bg, #1a1a22);
+  border: 1px solid var(--portal-tag-border, #2a2a35);
+  border-left: 4px solid var(--portal-tag-border, #2a2a35);
+  box-shadow: none;
+}
+
+.admin-card.card-pending {
+  border-left-color: var(--portal-accent, #d2935c);
+}
+
+.admin-card.card-approved {
+  border-left-color: var(--portal-accent, #d2935c);
+}
+
+.admin-card.card-published {
+  border-left-color: #34d399;
+}
+
+.admin-card.card-rejected {
+  border-left-color: #ff6b6b;
+}
+
+.admin-card-title {
+  font-family: "Geist", inherit;
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: none;
+  color: #fff;
+}
+
+.status-badge {
+  border: none;
+  text-transform: none;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.status-badge.pending {
+  background: rgba(210, 147, 92, 0.13);
+  color: var(--portal-accent, #d2935c);
+}
+
+.status-badge.approved {
+  background: rgba(210, 147, 92, 0.13);
+  color: var(--portal-accent, #d2935c);
+}
+
+.status-badge.rejected {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+}
+
+.status-badge.published {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+}
+
+.admin-card-meta {
+  color: var(--portal-muted, #9ca3af);
+}
+
+.admin-card-meta strong {
+  color: #fff;
+  text-transform: none;
+}
+
+.admin-card-objective {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.admin-card-actions a {
+  border: 1px solid var(--portal-tag-border, #2a2a35);
+  color: #fff;
+  text-transform: none;
+  box-shadow: none;
+  transition: background 0.15s ease;
+}
+
+.admin-card-actions a:active {
+  transform: none;
+}
+
+.admin-card-actions .publish {
+  background: var(--portal-accent, #d2935c);
+  border-color: var(--portal-accent, #d2935c);
+  color: #fff;
+}
+
+.admin-card-actions .publish:hover {
+  background: #c07f47;
+}
+
+@media (max-width: 640px) {
+  .request-workspace {
+    padding: 24px 20px;
+  }
+
+  .request-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .request-form-card {
+    padding: 20px;
+  }
+
+  .request-history-section {
+    padding: 24px 20px 32px;
+  }
+}

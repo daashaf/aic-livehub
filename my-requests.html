@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>my requests — AIC LiveHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Geist:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="discover.css?v=10" />
+    <link rel="stylesheet" href="admin.css?v=3" />
+    <link rel="stylesheet" href="student-request.css?v=5" />
+  </head>
+  <body class="discover-body auth-pending">
+    <div class="discover-page">
+      <header class="discover-header">
+        <div class="discover-header-inner">
+          <div class="discover-header-left">
+            <div class="discover-brand">
+              <span class="discover-logo-badge">A</span>
+              <div>
+                <p class="discover-brand-name">AIC <span>LIVESTREAMS</span></p>
+                <p class="discover-brand-sub">UNIVERSITY PORTAL</p>
+              </div>
+            </div>
+          </div>
+
+          <nav class="discover-nav">
+            <a href="discover.html">Discover</a>
+            <a href="my-requests.html" class="active">My Requests</a>
+          </nav>
+
+          <div class="discover-header-right">
+            <a class="discover-header-cta" href="student-dashboard.html">+ Send a Request</a>
+
+            <div class="discover-account">
+              <button
+                type="button"
+                class="discover-account-trigger"
+                id="account-trigger"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-label="account menu"
+              >
+                <div class="discover-avatar" id="profile-avatar"></div>
+              </button>
+              <div class="discover-account-menu" id="account-menu" hidden>
+                <p class="discover-account-label">Account</p>
+                <p class="discover-account-email" id="profile-name"></p>
+                <span class="discover-role-tag">Student</span>
+                <hr class="discover-account-divider" />
+                <a class="discover-account-logout" href="admin-login.html" id="logout-link">Log out</a>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="discover-menu-toggle"
+              id="mobile-menu-toggle"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-label="menu"
+            >
+              <span></span><span></span><span></span>
+            </button>
+          </div>
+        </div>
+
+        <nav class="discover-mobile-panel" id="mobile-panel" hidden>
+          <a href="discover.html">Discover</a>
+          <a href="my-requests.html" class="active">My Requests</a>
+          <a class="discover-header-cta" href="student-dashboard.html">+ Send a Request</a>
+        </nav>
+      </header>
+
+      <section class="request-history-section">
+        <div class="request-history-topbar">
+          <a class="request-history-new-btn" href="student-dashboard.html">+ New Request</a>
+        </div>
+
+        <h2 class="request-history-heading">All My Requests</h2>
+
+        <div class="request-calendar">
+          <div class="request-calendar-header">
+            <button type="button" class="cal-nav-btn" id="cal-prev" aria-label="previous month">‹</button>
+            <h3 id="cal-month-label"></h3>
+            <button type="button" class="cal-nav-btn" id="cal-next" aria-label="next month">›</button>
+          </div>
+          <div class="request-calendar-grid" id="request-calendar-grid"></div>
+        </div>
+
+        <div class="admin-list" id="my-request-list"></div>
+      </section>
+    </div>
+
+    <script type="module" src="student.js"></script>
+  </body>
+</html>

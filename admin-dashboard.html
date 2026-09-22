@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>admin dashboard — AIC LiveHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="admin-dashboard.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  </head>
+  <body class="admin-light-body auth-pending">
+    <div class="admin-light-shell">
+      <aside class="admin-light-sidebar">
+        <div class="admin-light-brand">
+          <span class="admin-light-logo">A</span>
+          <div class="admin-light-brand-text">
+            <p class="admin-light-brand-name">AIC LiveHub</p>
+            <p class="admin-light-brand-sub">Event Booking Admin</p>
+          </div>
+        </div>
+
+        <nav class="admin-light-nav" aria-label="admin navigation">
+          <button type="button" class="admin-light-nav-link active" data-view="requests">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2" /><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /></svg>
+            Manage booking requests
+          </button>
+          <button type="button" class="admin-light-nav-link" data-view="published">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
+            Published events
+          </button>
+          <button type="button" class="admin-light-nav-link" data-view="new">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14" /></svg>
+            New booking request
+          </button>
+        </nav>
+
+        <div class="admin-light-sidebar-footer">
+          <div class="admin-light-user">
+            <span class="admin-light-avatar" id="profile-avatar">A</span>
+            <div class="admin-light-user-text">
+              <p class="admin-light-user-name" id="profile-name"></p>
+              <p class="admin-light-user-role">Booking Administrator</p>
+            </div>
+          </div>
+          <a class="admin-light-logout" href="admin-login.html" id="logout-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="M16 17l5-5-5-5M21 12H9" /></svg>
+            Logout
+          </a>
+        </div>
+      </aside>
+
+      <main class="admin-light-main">
+        <section class="admin-light-view" id="view-requests">
+          <p class="admin-light-breadcrumb">AIC LiveHub / Booking Admin</p>
+          <h1 class="admin-light-heading">Manage booking requests</h1>
+
+          <div class="admin-light-stats" id="admin-stats"></div>
+
+          <div class="admin-light-tabs" id="request-tabs"></div>
+          <div class="admin-light-list" id="request-list"></div>
+        </section>
+
+        <section class="admin-light-view" id="view-published" hidden>
+          <p class="admin-light-breadcrumb">AIC LiveHub / Booking Admin</p>
+          <h1 class="admin-light-heading">Published events</h1>
+
+          <div class="admin-light-panel">
+            <p class="admin-light-panel-title">Approved &amp; published events</p>
+            <p class="admin-light-panel-sub">Manage events currently visible or scheduled for the public calendar.</p>
+
+            <div class="admin-light-toolbar">
+              <label class="admin-light-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+                <input type="text" id="published-search" placeholder="Search events, organizers, or venues" />
+              </label>
+              <select class="admin-light-status-filter" id="published-status-filter">
+                <option value="all">All statuses</option>
+                <option value="scheduled">Scheduled</option>
+                <option value="published">Published</option>
+              </select>
+            </div>
+
+            <div class="admin-light-list" id="published-list"></div>
+          </div>
+        </section>
+
+        <section class="admin-light-view" id="view-new" hidden>
+          <p class="admin-light-breadcrumb">AIC LiveHub / Booking Admin</p>
+          <h1 class="admin-light-heading">New booking request</h1>
+
+          <form class="admin-light-form-shell" id="new-request-form">
+            <div class="admin-light-form-header">
+              <div>
+                <h2>Create an event booking</h2>
+                <p>Add organizer, schedule, venue, and livestream details for admin review.</p>
+              </div>
+              <span class="admin-light-form-tag">All fields required unless marked optional</span>
+            </div>
+
+            <div class="admin-light-form-columns">
+              <div>
+                <div class="admin-light-form-section">
+                  <div class="admin-light-section-head">
+                    <span class="admin-light-section-num">1</span>
+                    <h3>Event &amp; organizer</h3>
+                  </div>
+                  <p class="admin-light-section-desc">Tell us what you are planning and who is responsible.</p>
+
+                  <label class="admin-light-field span-2">
+                    Event / workshop name
+                    <input type="text" id="field-title" placeholder="Add a clear event or workshop title" required />
+                  </label>
+
+                  <div class="admin-light-field-grid">
+                    <label class="admin-light-field">
+                      Organizer type
+                      <select id="field-organizer-type">
+                        <option value="Student">Student</option>
+                        <option value="Staff">Staff</option>
+                      </select>
+                    </label>
+                    <label class="admin-light-field">
+                      Organizer email
+                      <input type="email" id="field-organizer-email" placeholder="name@aic.edu" required />
+                    </label>
+                  </div>
+
+                  <div class="admin-light-field-grid">
+                    <label class="admin-light-field">
+                      Department / Club
+                      <input type="text" id="field-department" placeholder="e.g. Student Union or School of Design" required />
+                    </label>
+                    <label class="admin-light-field">
+                      Category
+                      <select id="field-category">
+                        <option value="Music & Gig">Music &amp; Gig</option>
+                        <option value="Academic Panels">Academic Panels</option>
+                        <option value="Club Mixers">Club Mixers</option>
+                        <option value="Gaming Nights">Gaming Nights</option>
+                        <option value="Performing Arts">Performing Arts</option>
+                      </select>
+                    </label>
+                  </div>
+
+                  <label class="admin-light-field span-2">
+                    Venue
+                    <input type="text" id="field-location" placeholder="Building, room, or campus location" required />
+                  </label>
+                </div>
+
+                <div class="admin-light-form-section">
+                  <div class="admin-light-section-head">
+                    <span class="admin-light-section-num">2</span>
+                    <h3>Schedule &amp; attendance</h3>
+                  </div>
+                  <p class="admin-light-section-desc">Set the full event window and expected audience.</p>
+
+                  <div class="admin-light-field-grid">
+                    <label class="admin-light-field">
+                      Start date &amp; time
+                      <input type="text" id="field-start" placeholder="click to pick a date & time" />
+                    </label>
+                    <label class="admin-light-field">
+                      End / due date &amp; time
+                      <input type="text" id="field-due" placeholder="click to pick a date & time" />
+                    </label>
+                  </div>
+
+                  <label class="admin-light-field span-2">
+                    Expected in-person audience count
+                    <input type="number" min="0" id="field-audience" placeholder="Enter estimated number of attendees" />
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <div class="admin-light-form-section">
+                  <div class="admin-light-section-head">
+                    <span class="admin-light-section-num">3</span>
+                    <h3>Livestream &amp; notes</h3>
+                  </div>
+                  <p class="admin-light-section-desc">Add remote access details and any instructions.</p>
+
+                  <label class="admin-light-field span-2">
+                    Livestream platform
+                    <select id="field-platform">
+                      <option value="youtube">YouTube</option>
+                      <option value="zoom">Zoom</option>
+                      <option value="MSTeams">Microsoft Teams</option>
+                    </select>
+                  </label>
+
+                  <label class="admin-light-field span-2">
+                    Meeting link (optional)
+                    <input type="url" id="field-stream-url" placeholder="https://" />
+                  </label>
+
+                  <label class="admin-light-field span-2">
+                    Comments for admin
+                    <textarea id="field-objective" rows="4" placeholder="Add setup needs, access notes, approval context, or special requests" required></textarea>
+                  </label>
+                </div>
+
+                <div class="admin-light-callout">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg>
+                  <div>
+                    <strong>Before you submit</strong>
+                    <p>Check dates, venue availability, and organizer email. Admin will review the request before publishing it to the public calendar.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="admin-light-form-footer">
+              <p>You can review and update details before the event is published.</p>
+              <button type="submit" class="admin-light-btn solid-primary">Submit booking request →</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <!-- publish modal -->
+    <div class="admin-light-overlay" id="publish-overlay" hidden>
+      <div class="admin-light-modal">
+        <h2 class="admin-light-modal-title">Publish event</h2>
+        <p class="admin-light-modal-sub">Confirm the details students will see before this goes live.</p>
+        <p class="admin-light-modal-error" id="publish-error" hidden></p>
+
+        <form id="publish-form">
+          <div class="admin-light-upload-zone" id="publish-upload-zone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="M17 8l-5-5-5 5M12 3v12" /></svg>
+            <p class="admin-light-upload-hint" id="publish-upload-hint">Paste a link to an event photo (optional)</p>
+          </div>
+          <label class="admin-light-field span-2">
+            Event photo URL (optional)
+            <input type="url" id="publish-image-url" placeholder="https://" />
+          </label>
+
+          <label class="admin-light-field span-2">
+            Event title
+            <input type="text" id="publish-title" required />
+          </label>
+          <div class="admin-light-field-grid">
+            <label class="admin-light-field">
+              Date &amp; time
+              <input type="text" id="publish-start" placeholder="click to pick a date & time" required />
+            </label>
+            <label class="admin-light-field">
+              Venue
+              <input type="text" id="publish-venue" required />
+            </label>
+          </div>
+          <label class="admin-light-field span-2">
+            Expected in-person audience count
+            <input type="number" min="0" id="publish-audience" />
+          </label>
+
+          <div class="admin-light-modal-footer">
+            <button type="button" class="admin-light-btn outline" id="publish-cancel">Cancel</button>
+            <button type="submit" class="admin-light-btn solid-primary" id="publish-submit">Publish</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- reschedule modal -->
+    <div class="admin-light-overlay" id="reschedule-overlay" hidden>
+      <div class="admin-light-modal small">
+        <h2 class="admin-light-modal-title">Reschedule event</h2>
+        <p class="admin-light-modal-sub">Update the date, time, or venue for this event.</p>
+        <p class="admin-light-modal-error" id="reschedule-error" hidden></p>
+
+        <form id="reschedule-form">
+          <label class="admin-light-field span-2">
+            Date &amp; time
+            <input type="text" id="reschedule-start" placeholder="click to pick a date & time" required />
+          </label>
+          <label class="admin-light-field span-2">
+            Venue
+            <input type="text" id="reschedule-venue" required />
+          </label>
+
+          <div class="admin-light-modal-footer">
+            <button type="button" class="admin-light-btn outline" id="reschedule-cancel">Cancel</button>
+            <button type="submit" class="admin-light-btn solid-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- confirm modal (deactivate / delete) -->
+    <div class="admin-light-overlay" id="confirm-overlay" hidden>
+      <div class="admin-light-modal small">
+        <h2 class="admin-light-modal-title" id="confirm-title">Are you sure?</h2>
+        <p class="admin-light-modal-sub" id="confirm-message"></p>
+        <div class="admin-light-modal-footer">
+          <button type="button" class="admin-light-btn outline" id="confirm-cancel">Cancel</button>
+          <button type="button" class="admin-light-btn text-rejectred" id="confirm-ok">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script type="module" src="admin.js"></script>
+  </body>
+</html>

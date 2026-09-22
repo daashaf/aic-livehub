@@ -1,0 +1,335 @@
+.portal-login-body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #131316;
+}
+
+.portal-login {
+  --portal-bg: #131316;
+  --portal-accent: #d2935c;
+  --portal-tag-bg: #1a1a22;
+  --portal-tag-border: #2a2a35;
+  --portal-muted: #9ca3af;
+  --portal-support: #9f5d2c;
+
+  position: relative;
+  overflow: hidden;
+  height: 100vh;
+  background: var(--portal-bg);
+  font-family: "Geist", Inter, system-ui, sans-serif;
+}
+
+.portal-glow {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.portal-glow-1 {
+  left: 18%;
+  top: 53%;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, var(--portal-accent) 0%, transparent 70%);
+  opacity: 0.55;
+}
+
+.portal-glow-2 {
+  left: 51%;
+  top: 61%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--accent-2) 0%, transparent 70%);
+  opacity: 0.35;
+}
+
+.portal-split {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 64px;
+  height: 100vh;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 40px 80px;
+}
+
+.portal-message {
+  position: relative;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  min-width: 0;
+}
+
+.portal-tagline-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.portal-tagline {
+  margin: 0;
+  font-family: "Bricolage Grotesque", Georgia, serif;
+  font-weight: 800;
+  font-size: 64px;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.portal-tagline-accent {
+  color: var(--portal-accent);
+}
+
+.portal-subtext {
+  margin: 0;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--portal-muted);
+  max-width: 60ch;
+}
+
+.portal-card {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 420px;
+  max-width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 32px;
+  border-radius: 28px;
+  background: #ffffff;
+  box-shadow: 0 16px 16px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.portal-card-header h2 {
+  margin: 0 0 8px;
+  font-family: "Geist", inherit;
+  font-weight: 700;
+  font-size: 30px;
+  color: #131316;
+}
+
+.portal-card-header p {
+  margin: 0;
+  font-size: 14px;
+  color: #000;
+}
+
+.portal-role-tabs {
+  display: flex;
+  padding: 4px;
+  border-radius: 12px;
+  background: rgba(19, 19, 22, 0.07);
+}
+
+.portal-tab {
+  flex: 1 1 0;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font-family: "Geist", inherit;
+  font-weight: 600;
+  font-size: 14px;
+  color: #131316;
+  cursor: pointer;
+}
+
+.portal-tab.active {
+  background: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(19, 19, 22, 0.18);
+}
+
+.portal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.portal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: "Geist", inherit;
+  font-weight: 600;
+  font-size: 14px;
+  color: #131316;
+}
+
+.portal-field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.portal-forgot-link {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--portal-support);
+  text-decoration: none;
+}
+
+.portal-forgot-link:hover {
+  text-decoration: underline;
+}
+
+.portal-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid var(--portal-tag-border);
+  border-radius: 12px;
+  padding: 13px 16px;
+  width: 100%;
+}
+
+.portal-field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  outline: none;
+  font-family: "Geist", inherit;
+  font-weight: 400;
+  font-size: 15px;
+  color: #131316;
+  background: transparent;
+}
+
+.portal-field input::placeholder {
+  color: #131316;
+  opacity: 0.6;
+}
+
+.portal-field input:focus-visible {
+  outline: 2px solid var(--portal-accent);
+  outline-offset: 2px;
+}
+
+.portal-eye-toggle {
+  flex: none;
+  width: 36px;
+  height: 24px;
+  padding: 0;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, var(--accent), var(--accent-2)) border-box;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.portal-eye-toggle img {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.portal-error {
+  margin: -8px 0 0;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.portal-error.success {
+  color: #2f9e5c;
+}
+
+.portal-login-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  background: #131316;
+  color: #fff;
+  font-family: "Geist", inherit;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.portal-login-btn:hover {
+  background: #26262e;
+}
+
+.portal-card-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.portal-card-footer p {
+  margin: 0;
+  font-size: 13px;
+  color: #000;
+}
+
+.portal-divider {
+  width: 100%;
+  height: 1px;
+  display: block;
+}
+
+.portal-support-link {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--portal-support);
+  text-decoration: underline;
+}
+
+@media (max-width: 960px) {
+  .portal-login-body {
+    height: auto;
+    overflow: visible;
+  }
+
+  .portal-login {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .portal-split {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    height: auto;
+    min-height: 100vh;
+    padding: 48px 24px;
+    gap: 48px;
+  }
+
+  .portal-card {
+    max-height: none;
+  }
+
+  .portal-tagline {
+    font-size: 40px;
+  }
+
+  .portal-card {
+    width: 100%;
+  }
+
+  .portal-glow {
+    width: 220px;
+    height: 220px;
+    top: -60px;
+    right: -60px;
+  }
+}

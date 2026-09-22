@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>new request — AIC LiveHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Geist:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="discover.css?v=10" />
+    <link rel="stylesheet" href="student-request.css?v=5" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  </head>
+  <body class="discover-body auth-pending">
+    <div class="discover-page">
+      <header class="discover-header">
+        <div class="discover-header-inner">
+          <div class="discover-header-left">
+            <div class="discover-brand">
+              <span class="discover-logo-badge">A</span>
+              <div>
+                <p class="discover-brand-name">AIC <span>LIVESTREAMS</span></p>
+                <p class="discover-brand-sub">UNIVERSITY PORTAL</p>
+              </div>
+            </div>
+          </div>
+
+          <nav class="discover-nav">
+            <a href="discover.html">Discover</a>
+            <a href="my-requests.html">My Requests</a>
+          </nav>
+
+          <div class="discover-header-right">
+            <a class="discover-header-cta" href="#new-request-form">+ Send a Request</a>
+
+            <div class="discover-account">
+              <button
+                type="button"
+                class="discover-account-trigger"
+                id="account-trigger"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-label="account menu"
+              >
+                <div class="discover-avatar" id="profile-avatar"></div>
+              </button>
+              <div class="discover-account-menu" id="account-menu" hidden>
+                <p class="discover-account-label">Account</p>
+                <p class="discover-account-email" id="profile-name"></p>
+                <span class="discover-role-tag">Student</span>
+                <hr class="discover-account-divider" />
+                <a class="discover-account-logout" href="admin-login.html" id="logout-link">Log out</a>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="discover-menu-toggle"
+              id="mobile-menu-toggle"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-label="menu"
+            >
+              <span></span><span></span><span></span>
+            </button>
+          </div>
+        </div>
+
+        <nav class="discover-mobile-panel" id="mobile-panel" hidden>
+          <a href="discover.html">Discover</a>
+          <a href="my-requests.html">My Requests</a>
+          <a class="discover-header-cta" href="#new-request-form">+ Send a Request</a>
+        </nav>
+      </header>
+
+      <div class="request-workspace">
+        <div class="request-form-column">
+          <div class="request-section-header">
+            <h1>Submit Campus Event Request</h1>
+            <p>Reserve sound equipment, venues, and obtain a livestream link.</p>
+          </div>
+
+          <form class="request-form-card" id="new-request-form">
+            <div class="request-form-grid">
+              <label class="request-field">
+                <span>Event Title</span>
+                <input type="text" id="field-title" placeholder="e.g. Battle of the Student DJs" required />
+              </label>
+
+              <label class="request-field">
+                <span>Organizer Name</span>
+                <input type="text" id="field-organizer" placeholder="e.g. Priya Nair" required />
+              </label>
+
+              <label class="request-field">
+                <span>Organizer Email</span>
+                <input type="email" id="field-organizer-email" readonly />
+              </label>
+
+              <label class="request-field">
+                <span>Department / Club</span>
+                <input type="text" id="field-department" placeholder="e.g. BIT" required />
+              </label>
+
+              <label class="request-field">
+                <span>Desired Venue Location</span>
+                <input type="text" id="field-location" placeholder="e.g. Student Union Stage" required />
+              </label>
+
+              <label class="request-field">
+                <span>Livestream Platform</span>
+                <select id="field-platform">
+                  <option value="youtube">YouTube Live</option>
+                  <option value="zoom">Zoom</option>
+                  <option value="MSTeams">MS Teams</option>
+                </select>
+              </label>
+
+              <label class="request-field">
+                <span>Category</span>
+                <select id="field-category">
+                  <option value="Music & Gig">Music &amp; Gig</option>
+                  <option value="Academic Panels">Academic Panels</option>
+                  <option value="Club Mixers">Club Mixers</option>
+                  <option value="Gaming Nights">Gaming Nights</option>
+                  <option value="Performing Arts">Performing Arts</option>
+                </select>
+              </label>
+
+              <label class="request-field">
+                <span>Expected Attendance</span>
+                <input type="text" id="field-audience" placeholder="Approx. 150 - 200 students" />
+              </label>
+
+              <label class="request-field">
+                <span>Preferred Start Date &amp; Time</span>
+                <input type="text" id="field-start" placeholder="click to pick a date & time" />
+              </label>
+
+              <label class="request-field">
+                <span>Preferred Due Date &amp; Time</span>
+                <input type="text" id="field-due" placeholder="click to pick a date & time" />
+              </label>
+
+              <label class="request-field" style="grid-column: span 2">
+                <span>Meeting Link (optional)</span>
+                <input type="url" id="field-stream-url" placeholder="e.g. Teams or Zoom link" />
+              </label>
+            </div>
+
+            <label class="request-field">
+              <span>Equipment &amp; Technical Stream Needs</span>
+              <textarea
+                id="field-objective"
+                rows="3"
+                placeholder="e.g. Need 4 mics, main PA speakers, DJ deck table. We want to enable HD livestream broadcast via AIC LiveHub."
+                required
+              ></textarea>
+            </label>
+
+            <div class="request-action-row">
+              <button type="button" class="request-btn-draft" id="save-draft-btn">Save Draft</button>
+              <button type="submit" class="request-btn-submit">Submit Request</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script type="module" src="student.js"></script>
+  </body>
+</html>

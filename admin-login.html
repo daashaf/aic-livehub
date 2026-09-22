@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>student/staff portal — AIC LiveHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Geist:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="portal-login.css" />
+  </head>
+  <body class="portal-login-body">
+    <div class="portal-login">
+      <div class="portal-split">
+        <div class="portal-message">
+          <span class="portal-glow portal-glow-1" aria-hidden="true"></span>
+          <span class="portal-glow portal-glow-2" aria-hidden="true"></span>
+          <div class="portal-tagline-section">
+            <h1 class="portal-tagline">aic <span class="portal-tagline-accent">livestreams</span></h1>
+            <p class="portal-subtext">don't just hear about it. see it.</p>
+          </div>
+        </div>
+
+        <div class="portal-card">
+          <div class="portal-card-header">
+            <h2>Log in</h2>
+            <p>Use your official university credentials</p>
+          </div>
+
+          <div class="portal-role-tabs" role="tablist">
+            <button type="button" class="portal-tab active" id="tab-student" role="tab" aria-selected="true">
+              Student Portal
+            </button>
+            <button type="button" class="portal-tab" id="tab-staff" role="tab" aria-selected="false">
+              Staff &amp; Ops
+            </button>
+          </div>
+
+          <form class="portal-form" id="login-form">
+            <label class="portal-field">
+              Email
+              <span class="portal-input">
+                <input type="email" id="field-email" placeholder="you@aic.ac.nz" required />
+              </span>
+            </label>
+
+            <label class="portal-field">
+              <span class="portal-field-label-row">
+                <span>Password</span>
+                <a href="#" class="portal-forgot-link" id="forgot-password-link">Forgot password?</a>
+              </span>
+              <span class="portal-input">
+                <input type="password" id="field-password" placeholder="••••••••" required />
+                <button type="button" class="portal-eye-toggle" id="toggle-password" aria-label="show password">
+                  <img src="assets/eye-icon.svg" alt="" aria-hidden="true" />
+                </button>
+              </span>
+            </label>
+
+            <p class="portal-error" id="login-error" hidden></p>
+
+            <button type="submit" class="portal-login-btn">Log in</button>
+          </form>
+
+          <div class="portal-card-footer">
+            <p>Use your university-provided email and password</p>
+            <img class="portal-divider" src="assets/divider-line.svg" alt="" aria-hidden="true" />
+            <a href="mailto:daashfernando@gmail.com" class="portal-support-link">Problems logging in? Contact IT Support</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="admin.js"></script>
+  </body>
+</html>

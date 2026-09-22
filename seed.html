@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>seed firestore — AIC LiveHub (dev utility)</title>
+    <style>
+      body { font-family: monospace; background: #242325; color: #f5f1e8; padding: 24px; }
+      button { font-family: inherit; font-size: 1rem; padding: 10px 20px; border-radius: 8px; border: none; background: #d0945f; cursor: pointer; }
+      pre { white-space: pre-wrap; background: #111; padding: 16px; border-radius: 8px; }
+    </style>
+  </head>
+  <body>
+    <h1>seed firestore (dev utility — not linked from the app)</h1>
+    <p>Writes the demo bookings below into the "bookings" collection using fixed IDs (req-1..req-9). Safe to re-run — it overwrites the same documents each time.</p>
+    <button id="seed-btn">run seed</button>
+    <pre id="log">ready.</pre>
+
+    <script type="module">
+      import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+      import { db } from "./firebase-config.js";
+
+      const bookings = {
+        "req-1": {
+          title: "ai hackathon opening keynote",
+          organizer: "Priya Nair",
+          department: "School of Computer Science",
+          location: "AUT South Campus, Building MC",
+          start: "2026-08-07T09:30:00",
+          due: "2026-08-08T19:30:00",
+          platform: "youtube",
+          audience: "300 students",
+          objective: "to increase audience participation by broadcasting the hackathon opening and judging to students who can't be on-site",
+          status: "published",
+          streamUrl: "",
+          images: 0,
+        },
+        "req-2": {
+          title: "culinary arts winter showcase",
+          organizer: "Marcus Webb",
+          department: "Culinary Arts Dept",
+          location: "City Campus, WG Building",
+          start: "2026-08-10T10:00:00",
+          due: "2026-08-14T16:00:00",
+          platform: "zoom",
+          audience: "120 students + alumni",
+          objective: "stream live cooking demos so students off-site can follow along and ask questions",
+          status: "pending",
+          streamUrl: "",
+          images: 0,
+        },
+        "req-3": {
+          title: "midnight arts market",
+          organizer: "Jade Coleman",
+          department: "Student Life",
+          location: "Quad Pavilion",
+          start: "2026-07-22T18:00:00",
+          due: "2026-07-22T21:00:00",
+          platform: "youtube",
+          audience: "200 students",
+          objective: "give students who missed the market a highlights recap and boost turnout for the next one",
+          status: "approved",
+          streamUrl: "",
+          images: 2,
+        },
+        "req-4": {
+          title: "campus takeover",
+          organizer: "AIC Events Team",
+          department: "Student Hub",
+          location: "Student Union Stage",
+          start: "2026-07-20T19:00:00",
+          due: "2026-07-20T23:00:00",
+          platform: "youtube",
+          audience: "500+ students",
+          objective: "flagship livestream to drive campus-wide participation in the welcome week event",
+          status: "published",
+          streamUrl: "https://www.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_LjQHig",
+          images: 5,
+        },
+        "req-5": {
+          title: "neon-noise night",
+          organizer: "Sound Society",
+          department: "Student Clubs",
+          location: "Building L Rooftop",
+          start: "2026-07-20T21:00:00",
+          due: "2026-07-21T00:00:00",
+          platform: "twitch",
+          audience: "150 students",
+          objective: "stream the rooftop set for students who can't get a spot on the roof",
+          status: "published",
+          streamUrl: "",
+          images: 4,
+        },
+        "req-6": {
+          title: "late-night finals cram session",
+          organizer: "Peer Support Team",
+          department: "Academic Support",
+          location: "Library Lawn",
+          start: "2026-07-18T20:00:00",
+          due: "2026-07-18T23:00:00",
+          platform: "zoom",
+          audience: "80 students",
+          objective: "extend the study session to students studying remotely during finals week",
+          status: "rejected",
+          streamUrl: "",
+          images: 0,
+        },
+        "req-7": {
+          title: "sunset skate jam",
+          organizer: "Skate Club",
+          department: "Student Clubs",
+          location: "River Plaza",
+          start: "2026-07-25T16:00:00",
+          due: "2026-07-25T19:00:00",
+          platform: "youtube",
+          audience: "180 students",
+          objective: "share the skate jam highlights with students who couldn't make it down to river plaza",
+          status: "published",
+          streamUrl: "",
+          images: 6,
+        },
+        "req-8": {
+          title: "study-sesh surprise",
+          organizer: "Peer Support Team",
+          department: "Academic Support",
+          location: "Library Lawn",
+          start: "2026-08-03T14:00:00",
+          due: "2026-08-03T17:00:00",
+          platform: "zoom",
+          audience: "90 students",
+          objective: "stream a surprise study-break event to students studying remotely",
+          status: "published",
+          streamUrl: "",
+          images: 3,
+        },
+        "req-9": {
+          title: "coffee-drop cypher",
+          organizer: "Music Society",
+          department: "Student Clubs",
+          location: "West Campus Cafe",
+          start: "2026-08-12T10:00:00",
+          due: "2026-08-12T12:00:00",
+          platform: "twitch",
+          audience: "100 students",
+          objective: "stream the open-mic cypher for students at other campuses",
+          status: "published",
+          streamUrl: "",
+          images: 5,
+        },
+      };
+
+      const log = document.getElementById("log");
+      document.getElementById("seed-btn").addEventListener("click", async () => {
+        log.textContent = "seeding...\n";
+        try {
+          for (const [id, data] of Object.entries(bookings)) {
+            await setDoc(doc(db, "bookings", id), data);
+            log.textContent += `wrote ${id}: ${data.title}\n`;
+          }
+          log.textContent += "\ndone. 9 bookings written to Firestore.";
+        } catch (err) {
+          log.textContent += `\nERROR: ${err.message}`;
+        }
+      });
+    </script>
+  </body>
+</html>
