@@ -982,6 +982,9 @@ body.admin-light-body {
 }
 
 .admin-light-upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border: 1.5px dashed var(--border-strong);
   border-radius: 12px;
   padding: 18px;
