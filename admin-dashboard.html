@@ -233,12 +233,13 @@
         <p class="admin-light-modal-error" id="publish-error" hidden></p>
 
         <form id="publish-form">
-          <div class="admin-light-upload-zone" id="publish-upload-zone">
+          <label class="admin-light-upload-zone" id="publish-upload-zone">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="M17 8l-5-5-5 5M12 3v12" /></svg>
-            <p class="admin-light-upload-hint" id="publish-upload-hint">Paste a link to an event photo (optional)</p>
-          </div>
+            <p class="admin-light-upload-hint" id="publish-upload-hint">Click to upload an event photo (optional)</p>
+            <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" id="publish-image-input" hidden />
+          </label>
           <label class="admin-light-field span-2">
-            Event photo URL (optional)
+            Event photo URL
             <input type="url" id="publish-image-url" placeholder="https://" />
           </label>
 

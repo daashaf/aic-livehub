@@ -39,6 +39,27 @@ async function sendEmail(type, booking, link) {
   }
 }
 
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function uploadImage(file) {
+  const dataBase64 = await fileToBase64(file);
+  const res = await fetch("/api/upload-image", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-app-secret": APP_SHARED_SECRET },
+    body: JSON.stringify({ filename: file.name, contentType: file.type, dataBase64 }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || `status ${res.status}`);
+  return data.url;
+}
+
 const ICONS = {
   location: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
   calendar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`,
@@ -615,6 +636,7 @@ function initPublishModal() {
   const form = document.getElementById("publish-form");
   const cancelBtn = document.getElementById("publish-cancel");
   const uploadZone = document.getElementById("publish-upload-zone");
+  const imageInput = document.getElementById("publish-image-input");
   const imageUrlInput = document.getElementById("publish-image-url");
   const hint = document.getElementById("publish-upload-hint");
   const errorEl = document.getElementById("publish-error");
@@ -631,6 +653,21 @@ function initPublishModal() {
 
   imageUrlInput.addEventListener("input", () => {
     updatePublishPreview(imageUrlInput.value.trim(), uploadZone, hint);
+  });
+
+  imageInput.addEventListener("change", async () => {
+    const file = imageInput.files?.[0];
+    if (!file) return;
+    hint.textContent = "Uploading…";
+    try {
+      const url = await uploadImage(file);
+      imageUrlInput.value = url;
+      updatePublishPreview(url, uploadZone, hint);
+    } catch (err) {
+      hint.textContent = `Couldn't upload: ${err.message}`;
+    } finally {
+      imageInput.value = "";
+    }
   });
 
   cancelBtn.addEventListener("click", closePublishModal);
@@ -716,7 +753,7 @@ function updatePublishPreview(url, uploadZone, hint) {
     uploadZone.prepend(img);
     hint.textContent = "Preview";
   } else {
-    hint.textContent = "Paste a link to an event photo (optional)";
+    hint.textContent = "Click to upload an event photo (optional)";
   }
 }
 
