@@ -217,12 +217,16 @@ function buildEventCard(event, savedIds, onToggleSave) {
 
   const image = document.createElement("div");
   image.className = "discover-event-image";
-  const meta = categoryMeta(event);
-  if (meta.image) {
-    image.style.backgroundImage = `linear-gradient(rgba(19, 19, 22, 0.15), rgba(19, 19, 22, 0.35)), url("${meta.image}")`;
+  if (event.imageUrl) {
+    image.style.backgroundImage = `linear-gradient(rgba(19, 19, 22, 0.15), rgba(19, 19, 22, 0.35)), url("${event.imageUrl}")`;
   } else {
-    image.style.background = meta.gradient;
-    image.textContent = meta.emoji;
+    const meta = categoryMeta(event);
+    if (meta.image) {
+      image.style.backgroundImage = `linear-gradient(rgba(19, 19, 22, 0.15), rgba(19, 19, 22, 0.35)), url("${meta.image}")`;
+    } else {
+      image.style.background = meta.gradient;
+      image.textContent = meta.emoji;
+    }
   }
 
   const saveBtn = document.createElement("button");
