@@ -1,8 +1,17 @@
+// Powers event.html — a single event's detail page. Reads the booking id
+// from ?id= in the URL and renders differently depending on whether the
+// event is upcoming, currently live, or already past.
+//
+// Note: this file used to also power a home/listing page (initHome,
+// renderList, etc.) before discover.html/discover.js replaced that; it was
+// trimmed down to just the detail-page logic those functions never covered.
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import { db } from "./firebase-config.js";
 
 const BOOKINGS_COLLECTION = "bookings";
 
+// "live" isn't a stored field — it's derived from comparing now() against
+// the booked start/due window every time the page renders.
 function deriveState(booking, now) {
   const start = new Date(booking.start);
   const due = new Date(booking.due);
@@ -49,6 +58,9 @@ async function renderDetail() {
     subtext.textContent = `${event.location} · ${formatDateTime(date)} · ${stateCopy}`;
   }
 
+  // Shown above the state-specific content below, for every state — the
+  // photo an admin uploaded/linked when publishing (see admin.js's Publish
+  // modal). Skipped entirely if the event has none.
   if (event.imageUrl) {
     const img = document.createElement("img");
     img.className = "detail-image";
@@ -58,6 +70,8 @@ async function renderDetail() {
   }
 
   if (state === "live") {
+    // Falls back to a generic YouTube embed if the organizer didn't supply
+    // a streamUrl — better than showing nothing.
     const iframe = document.createElement("iframe");
     iframe.src = event.streamUrl || "https://www.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_LjQHig";
     iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
@@ -69,6 +83,8 @@ async function renderDetail() {
     notice.textContent = `this stream hasn't started yet — check back ${formatDateTime(new Date(event.start))}.`;
     content.appendChild(notice);
   } else {
+    // Past events: placeholder gallery tiles (no real photo gallery feature
+    // exists yet — event.imageUrl above is the only real image currently).
     const gallery = document.createElement("div");
     gallery.className = "detail-gallery";
     const count = Math.max(event.images || 0, 3);

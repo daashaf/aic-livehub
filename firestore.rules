@@ -1,5 +1,13 @@
 rules_version = '2';
 
+// The real access-control layer for the whole app. roles.js has a client-side
+// copy of the admin list for routing, but THIS file is what actually gates
+// reads/writes — the client-side check can't be trusted since anyone can
+// edit browser JS.
+//
+// IMPORTANT: editing this file locally does nothing by itself. It has to be
+// manually pasted into Firebase Console -> Firestore -> Rules -> Publish
+// after every change — there's no CI/CD wired up for it.
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -8,33 +16,51 @@ service cloud.firestore {
     }
 
     match /bookings/{bookingId} {
+      // Published events are world-readable (any signed-in user) — that's
+      // what lets discover.html show the public event list. Otherwise, only
+      // admins or the student who created the request can see it.
       allow read: if resource.data.status == 'published'
         || (request.auth != null && (isAdmin() || resource.data.createdByUid == request.auth.uid));
 
+      // Students can create their own request, but only as 'pending' and
+      // only tagged with their own uid (can't submit on someone else's
+      // behalf, can't self-approve by creating as 'approved'). Admins can
+      // create in any status (used by the admin "new booking request" form).
       allow create: if request.auth != null && (
         isAdmin()
         || (request.resource.data.createdByUid == request.auth.uid && request.resource.data.status == 'pending')
       );
 
+      // Only admins can change a booking after creation (approve/reject/
+      // publish/reschedule/deactivate) — students can't edit their own
+      // request once submitted.
       allow update: if isAdmin();
 
       allow delete: if isAdmin();
 
+      // Comment thread on a booking (staff <-> organizer). Same visibility
+      // rule as the booking itself: admin, or the student who owns it.
       match /comments/{commentId} {
         function isOwner() {
           return get(/databases/$(database)/documents/bookings/$(bookingId)).data.createdByUid == request.auth.uid;
         }
 
         allow read: if request.auth != null && (isAdmin() || isOwner());
+        // authorUid must match the actual signed-in user — stops someone
+        // from posting a comment that impersonates a different author.
         allow create: if request.auth != null && (isAdmin() || isOwner()) && request.resource.data.authorUid == request.auth.uid;
+        // Comments are immutable once posted — no edit/delete, by design.
         allow update, delete: if false;
       }
     }
 
+    // Per-user document for discover.html's "save event" feature
+    // (savedEventIds). Each user can only touch their own.
     match /users/{uid} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
 
+    // Deny-by-default for everything else in the database.
     match /{document=**} {
       allow read, write: if false;
     }

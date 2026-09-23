@@ -1,3 +1,6 @@
+// Powers discover.html — the public event browsing page for students.
+// Students only; admins who land here get bounced to admin-dashboard.html
+// (see the onAuthStateChanged gate at the bottom of this file).
 import {
   collection,
   query,
@@ -25,6 +28,9 @@ const CATEGORY_META = {
 };
 const PHOTO_CATEGORIES = ["Music & Gig", "Gaming Nights", "Club Mixers"];
 
+// Deterministic pseudo-random pick, not a real hash — just needs to
+// consistently map the same event id to the same fallback category on every
+// render (avoids the card's art randomly changing on refresh).
 function hashString(str) {
   let hash = 0;
   for (let i = 0; i < str.length; i += 1) {
@@ -33,12 +39,19 @@ function hashString(str) {
   return hash;
 }
 
+// Visual fallback for cards/hero when an event has no category (or the
+// category isn't one of the ones with defined art). buildEventCard() below
+// checks event.imageUrl first and only falls back to this when there's no
+// real uploaded photo.
 function categoryMeta(event) {
   if (event.category && CATEGORY_META[event.category]) return CATEGORY_META[event.category];
   const fallbackCategory = PHOTO_CATEGORIES[hashString(event.id || event.title || "event") % PHOTO_CATEGORIES.length];
   return CATEGORY_META[fallbackCategory];
 }
 
+// "live" isn't a stored field — same derivation as app.js/admin.js, each
+// file keeps its own copy rather than sharing a module (no bundler in this
+// project to make a shared import convenient).
 function deriveState(booking, now) {
   const start = new Date(booking.start);
   const due = new Date(booking.due);
@@ -154,6 +167,9 @@ function initMobileMenu() {
   });
 }
 
+// Picks one event to feature at the top of the page: prefer whatever's live
+// right now, otherwise the soonest upcoming event. Hides the hero entirely
+// if there's nothing live or upcoming (e.g. only past events exist).
 function renderHero(events) {
   const section = document.getElementById("discover-hero");
   if (!section) return;
@@ -210,6 +226,9 @@ function matchesFilters(event, category, search) {
   return haystack.includes(search.toLowerCase());
 }
 
+// Builds one card for the events grid. Hover shows a popup with more detail
+// (see showHoverPopup/ensureHoverPopup below) without needing to click
+// through to event.html.
 function buildEventCard(event, savedIds, onToggleSave) {
   const card = document.createElement("a");
   card.className = "discover-event-card";
@@ -266,6 +285,9 @@ function buildEventCard(event, savedIds, onToggleSave) {
   return card;
 }
 
+// Single shared popup element reused across every card (created once, moved
+// around on hover) rather than one per card — cheaper than duplicating this
+// markup for every event in the grid.
 function ensureHoverPopup() {
   let popup = document.getElementById("discover-hover-popup");
   if (popup) return popup;
@@ -288,6 +310,8 @@ function ensureHoverPopup() {
   return popup;
 }
 
+// Centers the popup over the hovered card, clamped so it never runs off the
+// viewport edges; flips to below the card if there isn't room above it.
 function positionHoverPopup(popup, cardRect) {
   const margin = 12;
   const popupWidth = popup.offsetWidth || 320;
@@ -337,6 +361,9 @@ function renderEventsGrid(events, category, search, savedIds, onToggleSave) {
   filtered.forEach((event) => grid.appendChild(buildEventCard(event, savedIds, onToggleSave)));
 }
 
+// Entry point once the user is confirmed to be a signed-in, non-admin
+// student (see the gate at the bottom of this file). Owns the page's
+// filter/search state in closures, since there's no framework/store here.
 async function initDiscover(user) {
   renderProfile(user);
   initLogout();
@@ -400,6 +427,9 @@ async function initDiscover(user) {
   }
 }
 
+// Only runs this page's logic if the expected root element exists — lets
+// discover.js (and every other page's script) be loaded on any page without
+// erroring, since they all import shared helpers from the same files.
 if (document.getElementById("discover-events-grid")) {
   onAuthStateChanged(auth, (user) => {
     if (!user) {

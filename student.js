@@ -11,6 +11,10 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 import { db, auth } from "./firebase-config.js";
 import { isAdminEmail } from "./roles.js";
 
+// Powers both student-dashboard.html (the "new request" form) and
+// my-requests.html (a student's own request history + calendar). Which one
+// runs is decided by which page's root element is present — see the two
+// onAuthStateChanged gates at the bottom of this file.
 const BOOKINGS_COLLECTION = "bookings";
 
 let currentUser = null;
@@ -40,6 +44,11 @@ function formatCommentTime(timestamp) {
   return date.toLocaleString("en-US", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
 }
 
+// Comment thread on a single booking (staff <-> organizer), collapsed by
+// default. Comments only fetch the first time the thread is expanded, not
+// up front for every card — avoids firing one Firestore query per booking
+// just to render a list of cards. Same pattern duplicated in admin.js
+// (styled differently there for the light-themed dashboard).
 function buildCommentsSection(bookingId) {
   const wrap = document.createElement("div");
   wrap.className = "admin-comments";
@@ -136,6 +145,9 @@ function buildCommentsSection(bookingId) {
 // APP_SHARED_SECRET env var set on the Vercel project.
 const APP_SHARED_SECRET = "dbyajSLW9f-Y0gUdR1j4rDJObbv7x8KN";
 
+// Posts to the /api/send-email serverless function (see api/send-email.js).
+// Deliberately never throws — a failed notification email shouldn't undo or
+// block a booking that already saved successfully to Firestore.
 async function sendEmail(type, booking, link) {
   try {
     const res = await fetch("/api/send-email", {
@@ -218,6 +230,10 @@ function formatDayTime(iso) {
     .toLowerCase();
 }
 
+// Renders one month of a plain CSS-grid calendar (my-requests.html). Days
+// with requests get up to 2 title chips inline plus a "+N more" overflow
+// label; clicking a day toggles it as the active filter for the request
+// list below (handled by initCalendar's onSelectDay closure).
 function buildCalendarGrid(container, year, month, requestsByDay, selectedKey, onSelectDay) {
   container.innerHTML = "";
   const WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
@@ -280,6 +296,11 @@ function buildCalendarGrid(container, year, month, requestsByDay, selectedKey, o
   }
 }
 
+// Owns the calendar's month/selected-day state and re-renders the grid +
+// notifies the caller (onFilterChange) of which requests should currently be
+// visible — either everything, or just the selected day's requests, if one
+// is picked. Clicking an already-selected day deselects it (see the
+// toggle in buildCalendarGrid's onSelectDay callback below).
 function initCalendar(getRequests, onFilterChange) {
   const grid = document.getElementById("request-calendar-grid");
   const label = document.getElementById("cal-month-label");
@@ -390,6 +411,11 @@ const DRAFT_FIELDS = [
   "field-objective",
 ];
 
+// Manual "save draft" button (not autosave) that persists the new-request
+// form's field values to localStorage, restored on next visit to this page.
+// Cleared once a request is actually submitted (see initNewRequestForm).
+// Browser-local only — doesn't sync across devices, unlike a real draft
+// stored in Firestore would.
 function initDraftSave() {
   const btn = document.getElementById("save-draft-btn");
   if (!btn) return;
@@ -478,6 +504,10 @@ function initNewRequestForm(user, onCreated) {
     if (submitBtn) submitBtn.disabled = true;
     try {
       const docRef = await addDoc(collection(db, BOOKINGS_COLLECTION), booking);
+      // Two separate emails fire on every submit: one notifies admins a
+      // request needs review, the other confirms receipt to the organizer.
+      // Both are fire-and-forget (sendEmail never throws) so a slow/failed
+      // send can't block the redirect below.
       const dashboardLink = `${window.location.origin}${window.location.pathname.replace(/[^/]*$/, "")}admin-dashboard.html`;
       const myRequestsLink = `${window.location.origin}${window.location.pathname.replace(/[^/]*$/, "")}my-requests.html`;
       await Promise.all([
@@ -622,6 +652,10 @@ async function initMyRequestsPage(user) {
   }
 }
 
+// Two separate auth gates, one per page this file can run on — only the
+// block matching the current page's root element actually does anything.
+// Both redirect signed-out users to login and admins to their own
+// dashboard, so this file only ever runs its logic for a signed-in student.
 if (document.getElementById("new-request-form")) {
   onAuthStateChanged(auth, (user) => {
     if (!user) {

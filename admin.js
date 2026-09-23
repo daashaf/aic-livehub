@@ -18,6 +18,11 @@ import {
 import { db, auth } from "./firebase-config.js";
 import { isAdminEmail } from "./roles.js";
 
+// Dual-purpose file: powers BOTH admin-login.html (initLoginForm and friends,
+// near the bottom) and admin-dashboard.html (everything else). Which parts
+// actually run is decided by which DOM elements exist on the current page —
+// see the `if (document.getElementById(...))` gates scattered through this
+// file rather than a single router.
 const BOOKINGS_COLLECTION = "bookings";
 
 // Not a real secret — this file ships to the browser, so anyone can read it from
@@ -39,6 +44,8 @@ async function sendEmail(type, booking, link) {
   }
 }
 
+// readAsDataURL gives "data:image/png;base64,AAAA..." — only the part after
+// the comma is the actual base64 payload the API endpoint wants.
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -48,6 +55,8 @@ function fileToBase64(file) {
   });
 }
 
+// Sends the file to /api/upload-image (Vercel Blob under the hood — see
+// api/upload-image.js) and returns the public URL to store as imageUrl.
 async function uploadImage(file) {
   const dataBase64 = await fileToBase64(file);
   const res = await fetch("/api/upload-image", {
@@ -103,11 +112,18 @@ function organizerLine(request) {
   return `${who}${dept}`;
 }
 
+// Formats a Date back into flatpickr's "Y-m-d\TH:i" string, in LOCAL time.
+// Deliberately not using toISOString() here — that converts to UTC, which
+// would silently shift the displayed time by the browser's timezone offset.
+// Used when the publish/reschedule modals recompute `due` after the admin
+// changes `start` (see initPublishModal/initRescheduleModal below).
 function toFlatpickrValue(date) {
   const pad = (n) => String(n).padStart(2, "0");
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
+// "live" isn't a stored field — same derivation duplicated in app.js and
+// discover.js (each file keeps its own copy; no shared module/bundler here).
 function deriveState(booking, now) {
   const start = new Date(booking.start);
   const due = new Date(booking.due);
@@ -116,6 +132,9 @@ function deriveState(booking, now) {
   return "upcoming";
 }
 
+// Published events show as "Scheduled" (blue) until their start time
+// arrives, then "Published" (green) for both live and past — there's no
+// separate stored status for this, it's purely derived from the clock.
 function publishedBadge(request) {
   const state = deriveState(request, new Date());
   return state === "upcoming" ? { label: "Scheduled", cls: "scheduled" } : { label: "Published", cls: "published" };
@@ -601,6 +620,10 @@ function renderPublishedList() {
 
 /* ---------- confirm modal ---------- */
 
+// Generic yes/no confirmation dialog reused for both Deactivate and Delete —
+// caller supplies the copy and what happens on confirm, this just handles
+// showing/hiding the shared overlay and wiring/unwiring the buttons each
+// time so listeners don't pile up across repeated opens.
 function openConfirmModal({ title, message, onConfirm }) {
   const overlay = document.getElementById("confirm-overlay");
   const titleEl = document.getElementById("confirm-title");
@@ -687,6 +710,10 @@ function initPublishModal() {
       return;
     }
 
+    // The modal only lets the admin pick a new start time, not a separate
+    // due time — so if start changes, shift `due` by the same amount to
+    // preserve the original event duration rather than leaving a stale due
+    // date that could end up before the new start.
     let dueValue = publishBooking.due;
     if (publishBooking.start && publishBooking.due) {
       const duration = new Date(publishBooking.due) - new Date(publishBooking.start);
@@ -745,6 +772,11 @@ function openPublishModal(request) {
   overlay.hidden = false;
 }
 
+// Swaps the upload zone between its empty state (icon + hint) and preview
+// state (the chosen/pasted image). Uses style.display rather than the
+// `hidden` property on the icon — `svg.hidden = true` doesn't reliably
+// reflect to the content attribute for SVG elements, so it silently does
+// nothing; style.display works regardless of element type.
 function updatePublishPreview(url, uploadZone, hint) {
   uploadZone.querySelector("img")?.remove();
   const icon = uploadZone.querySelector("svg");
@@ -935,6 +967,11 @@ function initNewRequestForm() {
   });
 }
 
+// --- Everything below this point is the admin-login.html side of this
+// file — form handling, password visibility, the student/staff tab toggle,
+// and password reset. The gate at the very bottom decides which parts of
+// this whole file actually do anything on a given page. ---
+
 function redirectAfterAuth(email) {
   window.location.href = isAdminEmail(email) ? "admin-dashboard.html" : "discover.html";
 }
@@ -1065,6 +1102,9 @@ async function initDashboard() {
   }
 }
 
+// Dashboard gate — only runs on admin-dashboard.html (detected by the stats
+// element existing). Bounces signed-out users to login and non-admin users
+// to discover.html, mirroring the equivalent gates in student.js/discover.js.
 if (document.getElementById("admin-stats")) {
   onAuthStateChanged(auth, (user) => {
     if (!user) {
@@ -1080,6 +1120,9 @@ if (document.getElementById("admin-stats")) {
     initDashboard();
   });
 }
+// These four are safe to call unconditionally on every page — each one
+// no-ops internally if its expected element isn't present (e.g. running on
+// the dashboard instead of the login page).
 initLoginForm();
 initPasswordToggle();
 initRoleTabs();

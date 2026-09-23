@@ -1,3 +1,12 @@
+// Vercel serverless function (not a static file — this runs server-side on
+// Vercel's infra, unlike everything else in the repo). It exists because
+// SMTP credentials can never be used safely from browser JS: anyone could
+// read them from page source and send mail through the account. This
+// function holds the credentials (as Vercel env vars, never in the repo) and
+// the client just POSTs a { type, booking, link } payload to it.
+//
+// Called from admin.js/student.js's sendEmail() helper for three flows:
+// organizer_submitted, admin_new_request, organizer_published.
 const nodemailer = require("nodemailer");
 
 const ADMIN_NOTIFY_EMAIL = process.env.ADMIN_NOTIFY_EMAIL || "daashaf003@gmail.com";
@@ -9,6 +18,10 @@ function formatDateTime(iso) {
   return date.toLocaleString("en-US", { weekday: "short", day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" });
 }
 
+// Builds the { to, subject, text } for one of the three known email types.
+// Templates live here (server-side) rather than in an external service
+// (this replaced an earlier EmailJS-based version) so content changes don't
+// need a third-party dashboard.
 function buildEmail(type, payload) {
   const b = payload.booking || {};
   const link = payload.link || "";
@@ -84,11 +97,18 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // Not real authentication — this secret ships inside admin.js/student.js,
+  // so anyone who reads page source can find it. It only screens out casual/
+  // automated abuse of the endpoint (spamming through this Gmail account),
+  // not a determined attacker. Skipped entirely if the env var isn't set.
   if (process.env.APP_SHARED_SECRET && req.headers["x-app-secret"] !== process.env.APP_SHARED_SECRET) {
     res.status(401).json({ error: "unauthorized" });
     return;
   }
 
+  // Optional second layer: restrict by Origin header. Off by default
+  // (ALLOWED_ORIGINS unset) since the app doesn't have a final locked-in
+  // domain yet.
   const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
   if (allowedOrigins.length > 0) {
     const origin = req.headers.origin || "";
@@ -114,6 +134,9 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // Fail soft, not hard: if SMTP isn't configured (e.g. a fresh deploy
+  // before env vars are set), don't break the booking flow that triggered
+  // this — the booking itself already saved to Firestore successfully.
   if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
     console.warn("SMTP_USER / SMTP_PASS not configured — skipping send.");
     res.status(200).json({ ok: false, skipped: true, reason: "SMTP not configured" });

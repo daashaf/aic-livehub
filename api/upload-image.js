@@ -1,3 +1,12 @@
+// Vercel serverless function backing the Publish modal's image upload.
+// Client sends the file as base64 JSON (simpler than multipart parsing in a
+// bare Node function); this decodes it and stores it in Vercel Blob, then
+// returns the public URL to save as the booking's imageUrl.
+//
+// Auth to Vercel Blob itself needs no token here — the @vercel/blob SDK
+// authenticates automatically via Vercel's OIDC runtime identity + the
+// BLOB_STORE_ID env var when running on Vercel's infrastructure (set up by
+// connecting the Blob store to this project in the dashboard).
 const { put } = require("@vercel/blob");
 
 const MAX_BYTES = 5 * 1024 * 1024;
