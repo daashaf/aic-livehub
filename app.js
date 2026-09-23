@@ -49,6 +49,14 @@ async function renderDetail() {
     subtext.textContent = `${event.location} · ${formatDateTime(date)} · ${stateCopy}`;
   }
 
+  if (event.imageUrl) {
+    const img = document.createElement("img");
+    img.className = "detail-image";
+    img.src = event.imageUrl;
+    img.alt = event.title || "";
+    content.appendChild(img);
+  }
+
   if (state === "live") {
     const iframe = document.createElement("iframe");
     iframe.src = event.streamUrl || "https://www.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_LjQHig";
