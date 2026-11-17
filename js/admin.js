@@ -898,6 +898,17 @@ function initViewSwitching() {
   });
 }
 
+// Same-day (or past) requests are blocked: the start date must be after
+// today. Compares the date part of the picker value ("YYYY-MM-DDTHH:mm",
+// local time) against today's local date. Client-side only, so it guards the
+// form but isn't enforced by firestore.rules.
+function startsAfterToday(startValue) {
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  return startValue.slice(0, 10) > today;
+}
+
 function initDateTimePickers() {
   if (!window.flatpickr) return {};
   const opts = {
@@ -942,6 +953,11 @@ function initNewRequestForm() {
 
     if (!booking.start || !booking.due) {
       window.alert("Pick a start and due date & time.");
+      return;
+    }
+
+    if (!startsAfterToday(booking.start)) {
+      window.alert("Same-day requests aren't allowed. Please choose a start date from tomorrow onwards.");
       return;
     }
 
